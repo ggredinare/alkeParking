@@ -2,6 +2,7 @@ package model
 
 import enums.VehicleType
 import java.util.*
+import kotlin.random.Random
 
 data class Vehicle(
     val plate: String,
@@ -20,5 +21,12 @@ data class Vehicle(
         }
         return super.equals(other)
     }
+    
+    
     override fun hashCode(): Int = this.plate.hashCode()
+    
+    public fun getRandomParkedTime() : Long{
+        return (Calendar.getInstance().timeInMillis + Random.nextInt(60000, 1000000)) - checkInTime.timeInMillis)
+    }
+    
 }
