@@ -9,12 +9,8 @@ data class Vehicle(
     val discountCard: String? = null,
 ) {
     val checkInTime: Calendar = Calendar.getInstance()
-    var parkedTime: Long
-        // get() = ((Calendar.getInstance().timeInMillis - checkInTime.timeInMillis) / 60000)
-
-    init {
-        this.parkedTime = kotlin.random.Random.nextInt(0, 240).toLong()
-    }
+    val parkedTime: Long = kotlin.random.Random.nextInt(0, 240).toLong()
+        //get() = ((Calendar.getInstance().timeInMillis - checkInTime.timeInMillis) / 60000)
 
     override fun equals(other: Any?): Boolean {
         if (other is Vehicle) {
