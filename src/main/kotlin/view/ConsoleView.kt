@@ -7,6 +7,7 @@ import enums.VehicleType
 import model.Parking
 import model.ParkingSpace
 import model.Vehicle
+import kotlin.random.Random
 
 class ConsoleView {
     private val spaces = "-".repeat(50)
@@ -15,7 +16,7 @@ class ConsoleView {
 
     fun start() {
         var input = 0
-        addVehicles()
+        addVehicles(5, false)
         while (input != 6) {
 
             println(spaces)
@@ -31,7 +32,7 @@ class ConsoleView {
 
             input = inputInt(6)
             println()
-            when(input) {
+            when (input) {
                 1 -> checkInVehicle()
                 2 -> checkOut()
                 3 -> listPlates()
@@ -50,7 +51,11 @@ class ConsoleView {
 
         val plate = inputPlate()
         println(spaces)
-        val type = inputType()
+        println("[1] - Car")
+        println("[2] - Motorcycle")
+        println("[3] - Minibus")
+        println("[4] - Bus")
+        val type = makeVehicleType(inputInt(4))
         println(spaces)
         val discountCard = inputDiscount()
         println(spaces)
@@ -83,8 +88,8 @@ class ConsoleView {
 
         val plate = inputPlate()
 
-        for(i in parkingSpace.parking.vehicles) {
-            if(plate == i.plate) {
+        for (i in parkingSpace.parking.vehicles) {
+            if (plate == i.plate) {
                 printVehicle(i)
                 return
             }
@@ -139,25 +144,6 @@ class ConsoleView {
         return input
     }
 
-    private fun inputType(): VehicleType {
-        println("[1] - Car")
-        println("[2] - Motorcycle")
-        println("[3] - Minibus")
-        println("[4] - Bus")
-
-        val input = inputInt(4)
-        lateinit var type: VehicleType
-
-        when (input) {
-            1 -> type = VehicleType.CAR
-            2 -> type = VehicleType.MOTORCYCLE
-            3 -> type = VehicleType.MINIBUS
-            4 -> type = VehicleType.BUS
-        }
-
-        return type
-    }
-
     private fun inputDiscount(): String? {
         var done = true
         var input: String?
@@ -169,11 +155,11 @@ class ConsoleView {
         inputInt = inputInt(2)
         println()
 
-        if(inputInt == 2) {
+        if (inputInt == 2) {
             done = false
         }
 
-        while(done){
+        while (done) {
             print("Type the discount card: ")
             input = readLine()!!.trim().uppercase()
 
@@ -188,7 +174,7 @@ class ConsoleView {
             println("[2] - No")
             inputInt = inputInt(2)
 
-            if(inputInt == 2) {
+            if (inputInt == 2) {
                 done = false
             }
             println()
@@ -198,15 +184,28 @@ class ConsoleView {
     }
 
 
+    private fun makeVehicleType(n: Int): VehicleType {
+        lateinit var type: VehicleType
+
+        when (n) {
+            1 -> type = VehicleType.CAR
+            2 -> type = VehicleType.MOTORCYCLE
+            3 -> type = VehicleType.MINIBUS
+            4 -> type = VehicleType.BUS
+        }
+
+        return type
+    }
+
     private fun loading(n: Int) {
-        for(i in 1..n) {
+        for (i in 1..n) {
             print("-")
             Thread.sleep(500)
         }
         println()
     }
 
-    private fun printVehicle(vehicle: Vehicle){
+    private fun printVehicle(vehicle: Vehicle) {
         val cardDis = vehicle.discountCard ?: "N/A"
 
         println(spaces)
@@ -219,25 +218,52 @@ class ConsoleView {
     }
 
 
-    fun addVehicles() {
-        val vehicle = Vehicle("AAS0000", VehicleType.CAR, null)
-        println(parkingSpace.parking.checkIn(vehicle))
+    fun addVehicles(n: Int, bind: Boolean) {
+        for (i in 1..n) {
+            val plate = randomPlate()
+            val random = Random.nextInt(1, 5)
+            val type = makeVehicleType(random)
+            val discountCard = randomDiscount()
 
-        val vehicle2 = Vehicle("ARE0000", VehicleType.CAR, "BIGDAY15")
-        println(parkingSpace.parking.checkIn(vehicle2))
+            val vehicle = Vehicle(plate, type, discountCard)
 
-        val vehicle3 = Vehicle("AAE0200", VehicleType.BUS, "BIGDAY15")
-        println(parkingSpace.parking.checkIn(vehicle3))
+            val str = String.format(" %-6s : %-10s : %-7s ", vehicle.plate, vehicle.type.type, vehicle.discountCard)
+            println(str)
+            parkingSpace.parking.checkIn(vehicle)
 
-        val vehicle4 = Vehicle("ACE0000", VehicleType.MOTORCYCLE, "BIGDAY15")
-        println(parkingSpace.parking.checkIn(vehicle4))
+            if (bind) {
+                println(parkingSpace.checkOutVehicle(plate))
+            }
+        }
 
-        val vehicle5 = Vehicle("SAE0000", VehicleType.MINIBUS, "BIGDAY15")
-        println(parkingSpace.parking.checkIn(vehicle5))
-
-        println(parkingSpace.checkOutVehicle("AAS0000"))
-        println(parkingSpace.checkOutVehicle("ARE0000"))
-        println(parkingSpace.checkOutVehicle("AAE0200"))
     }
 
+    private fun randomPlate(): String {
+        val charPoolChar: CharRange = 'A'..'Z'
+        val charPoolNum: CharRange = '0'..'9'
+        var str = ""
+
+        for (i in 1..3) {
+            str += charPoolChar.random()
+        }
+        str += charPoolNum.random()
+        str += (charPoolChar + charPoolNum).random()
+
+        for (i in 1..2) {
+            str += charPoolNum.random()
+        }
+
+        return str
+    }
+
+    private fun randomDiscount(): String? {
+        val haveDiscount = Random.nextInt(1, 3)
+        var cardDiscount: String? = null
+
+        if (haveDiscount == 1) {
+            cardDiscount = validDiscounts.get(Random.nextInt(0, 2))
+        }
+
+        return cardDiscount
+    }
 }

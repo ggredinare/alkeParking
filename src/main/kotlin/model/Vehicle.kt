@@ -11,8 +11,7 @@ data class Vehicle(
     val checkInTime: Calendar = Calendar.getInstance()
 
     val parkedTime: Long
-        //get() = 120
-        get() = (Calendar.getInstance().timeInMillis - checkInTime.timeInMillis) / 60000
+        get() = ((Calendar.getInstance().timeInMillis - checkInTime.timeInMillis) / 60000) + Random().nextInt(0, 240)
 
     override fun equals(other: Any?): Boolean {
         if (other is Vehicle) {
