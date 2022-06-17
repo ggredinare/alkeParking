@@ -13,7 +13,7 @@ data class ParkingSpace(var parking: Parking) {
         for (vehicle in parking.vehicles) {
             if (plate.equals(vehicle.plate)) {
                 val type = vehicle.type
-                val parkedTime = vehicle.parkedTime.toInt() ?: 0
+                val parkedTime = vehicle.parkedTime.toInt()
                 val discountCard = vehicle.discountCard != null
 
                 if (parking.vehicles.remove(vehicle)) {

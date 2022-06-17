@@ -10,7 +10,7 @@ import model.Vehicle
 import kotlin.random.Random
 
 class ConsoleView {
-    private val spaces = "-".repeat(50)
+    private val spaces = "-".repeat(70)
     private val parkingSpace = ParkingSpace(Parking())
     private val validDiscounts = arrayOf("BIGDAY15", "ALKE15")
 
@@ -43,6 +43,7 @@ class ConsoleView {
         }
 
     }
+
 
     private fun checkInVehicle() {
         println(spaces)
@@ -220,23 +221,18 @@ class ConsoleView {
 
     fun addVehicles(n: Int, bind: Boolean) {
         for (i in 1..n) {
-            val plate = randomPlate()
-            val random = Random.nextInt(1, 5)
-            val type = makeVehicleType(random)
-            val discountCard = randomDiscount()
+            val vehicle = Vehicle(randomPlate(), makeVehicleType(Random.nextInt(1, 5)), randomDiscount())
+            val result = parkingSpace.parking.checkIn(vehicle)
 
-            val vehicle = Vehicle(plate, type, discountCard)
-
-            val str = String.format("%-6s : %-10s : %-7s", vehicle.plate, vehicle.type.type, vehicle.discountCard)
+            val str = String.format("%-10s : %-10s : %-10s : %-10s : %s", vehicle.plate, vehicle.type.type, vehicle.discountCard,vehicle.parkedTime, result)
             println(str)
-            println(parkingSpace.parking.checkIn(vehicle))
 
             if (bind) {
-                println(parkingSpace.checkOutVehicle(plate))
+                println(parkingSpace.checkOutVehicle(vehicle.plate))
                 println(spaces)
             }
         }
-
+        loading(5)
     }
 
     private fun randomPlate(): String {

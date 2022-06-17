@@ -33,7 +33,7 @@ data class Parking(val vehicles: MutableSet<Vehicle>) {
         return "$ANSI_YELLOW$vehicles$ANSI_RESET vehicles have checked out and have earnings of $ANSI_GREEN$ $earns.00$ANSI_RESET"
     }
 
-    fun listVehicles(): Unit {
+    fun listVehicles() {
         this.vehicles.forEach {
             println(it.plate)
         }
