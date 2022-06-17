@@ -16,7 +16,7 @@ class ConsoleView {
 
     fun start() {
         var input = 0
-        addVehicles(5, false)
+
         while (input != 6) {
 
             println(spaces)
@@ -227,12 +227,13 @@ class ConsoleView {
 
             val vehicle = Vehicle(plate, type, discountCard)
 
-            val str = String.format(" %-6s : %-10s : %-7s ", vehicle.plate, vehicle.type.type, vehicle.discountCard)
+            val str = String.format("%-6s : %-10s : %-7s", vehicle.plate, vehicle.type.type, vehicle.discountCard)
             println(str)
-            parkingSpace.parking.checkIn(vehicle)
+            println(parkingSpace.parking.checkIn(vehicle))
 
             if (bind) {
                 println(parkingSpace.checkOutVehicle(plate))
+                println(spaces)
             }
         }
 

@@ -7,6 +7,6 @@ const val ANSI_YELLOW = "\u001B[33m"
 
 fun main() {
     val program = ConsoleView()
-    program.addVehicles(8, false)
+    program.addVehicles(4, true)
     program.start()
 }
